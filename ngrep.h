@@ -5,7 +5,7 @@
  *
  */
 
-#define VERSION "1.46"
+#define VERSION "1.46.1"
 
 /*
  * We cache the standard frame sizes here to save us time and
@@ -23,6 +23,17 @@
 #define IEEE80211HDR_SIZE 32
 #define PFLOGHDR_SIZE 48
 #define VLANHDR_SIZE 4
+
+#ifndef ETHERTYPE_IP
+#define ETHERTYPE_IP      0x0800
+#endif
+#ifndef ETHERTYPE_IPV6
+#define ETHERTYPE_IPV6      0x86dd
+#endif
+
+#define EXTRACT_16BITS(p) \
+  ((uint16_t)((uint16_t)*((const uint8_t *)(p) + 0) << 8 | \
+           (uint16_t)*((const uint8_t *)(p) + 1)))
 
 /*
  * Default patterns for BPF and regular expression filters.
@@ -42,7 +53,8 @@
  * While the behavior is technically consistent, to the user it can be
  * surprising, confusing, and therefore Dumb As Shit.  For convenience' sake, we
  * fix this for them by including VLAN (optionally) back into the stream
- * targeting IP traffic.
+ * targeting IP traffic, and compensating for the variable offset in the packet
+ * decoder.
  */
 
 #if USE_IPv6
