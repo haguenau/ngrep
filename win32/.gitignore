@@ -1,6 +1,6 @@
 *.sdf
 *.opensdf
 *.suo
-*.vcxproj*
+*.vcxproj.*
 Debug/
 Release/
